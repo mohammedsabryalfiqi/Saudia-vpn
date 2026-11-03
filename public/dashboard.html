@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>لوحة التحكم — سعودية VPN</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- ===== شاشة الدخول ===== -->
+<div id="loginView" class="login-wrap hidden">
+  <div class="card login-card">
+    <a class="brand" href="/">
+      <img src="/assets/logo.svg" alt="">
+      <span>سعودية VPN<small>SAUDIA VPN</small></span>
+    </a>
+    <h1>لوحة التحكم</h1>
+    <p class="sub">سجّل الدخول لإدارة شبكتك السعودية الخاصة</p>
+    <form id="loginForm">
+      <div class="field">
+        <label for="loginPassword">كلمة المرور</label>
+        <input class="input" type="password" id="loginPassword" autocomplete="current-password" placeholder="••••••••" required>
+      </div>
+      <button class="btn btn-primary btn-block btn-lg" type="submit" id="loginBtn">دخول</button>
+      <div class="login-error" id="loginError"></div>
+    </form>
+    <div class="login-hint hidden" id="demoHint">
+      🔎 وضع المعاينة التجريبية — كلمة المرور: <code>saudia2030</code>
+    </div>
+    <p style="margin-top:18px;"><a href="/" class="muted" style="font-size:13.5px;">→ العودة للصفحة الرئيسية</a></p>
+  </div>
+</div>
+
+<!-- ===== التطبيق ===== -->
+<div id="appView" class="app hidden">
+  <aside class="sidebar">
+    <a class="brand" href="/">
+      <img src="/assets/logo.svg" alt="">
+      <span>سعودية VPN<small>SAUDIA VPN</small></span>
+    </a>
+    <nav class="side-nav" id="sideNav">
+      <button data-tab="overview" class="active"><span class="ico">📊</span>نظرة عامة</button>
+      <button data-tab="devices"><span class="ico">📱</span>أجهزتي</button>
+      <button data-tab="server"><span class="ico">🇸🇦</span>الخادم السعودي</button>
+      <button data-tab="guides"><span class="ico">📖</span>أدلة التوصيل</button>
+      <button data-tab="check"><span class="ico">🌍</span>فحص الاتصال</button>
+      <button data-tab="settings"><span class="ico">⚙️</span>الإعدادات</button>
+    </nav>
+    <div class="side-foot">
+      <span id="modeBadge" class="badge badge-amber"><span class="dot pulse"></span>وضع المعاينة</span>
+      <button class="btn btn-ghost btn-sm" id="logoutBtn">تسجيل الخروج</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h2 id="pageTitle">نظرة عامة</h2>
+        <div class="sub" id="pageSub">حالة شبكتك السعودية الخاصة</div>
+      </div>
+      <div class="topbar-actions">
+        <span id="serverPill" class="badge"><span class="dot"></span>—</span>
+        <button class="btn btn-primary btn-sm" id="topAddDevice">+ أضف جهازًا</button>
+      </div>
+    </header>
+
+    <div id="demoBanner" class="banner hidden">
+      ⚠️ <span><b>وضع المعاينة:</b> البيانات والأجهزة هنا تجريبية للتجربة فقط، ولا يوجد اتصال سعودي حقيقي بعد. لتفعيل VPN فعلي، ثبّت النظام على خادم داخل السعودية من تبويب <a href="#" data-goto="server">الخادم السعودي</a>.</span>
+    </div>
+
+    <!-- نظرة عامة -->
+    <section id="tab-overview" class="tab active">
+      <div class="stat-grid" id="statGrid"></div>
+      <div class="grid-2-13">
+        <div class="card">
+          <div class="card-title"><span class="emoji">📈</span>حركة البيانات <span class="badge" id="chartModeBadge" style="margin-inline-start:auto;">—</span></div>
+          <div class="chart-wrap"><canvas id="trafficChart"></canvas></div>
+          <div class="chart-legend">
+            <span><i style="background:#22c55e;"></i>تنزيل</span>
+            <span><i style="background:#d9b45b;"></i>رفع</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="emoji">🖥️</span>الخادم</div>
+          <div class="kv" id="serverKv"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="emoji">⚡</span>إجراءات سريعة</div>
+        <div class="quick-actions">
+          <button class="quick-action" data-goto="devices" data-action="add"><span class="qa-ico">📱</span>إضافة جهاز جديد</button>
+          <button class="quick-action" data-goto="check"><span class="qa-ico">🌍</span>فحص IP الحالي</button>
+          <button class="quick-action" data-goto="server"><span class="qa-ico">🇸🇦</span>إعداد خادم سعودي</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- أجهزتي -->
+    <section id="tab-devices" class="tab">
+      <div class="section-bar">
+        <h3>الأجهزة المتصلة بشبكتك</h3>
+        <button class="btn btn-primary" id="addDeviceBtn">+ أضف جهازًا</button>
+      </div>
+      <div id="peerGrid" class="peer-grid"></div>
+      <div id="peerEmpty" class="card empty-state hidden">
+        <div class="e-ico">📱</div>
+        <h3>لا توجد أجهزة بعد</h3>
+        <p>أضف جوالك أو لابتوبك لتحصل على رمز QR وملف إعداد جاهز خلال ثوانٍ.</p>
+        <button class="btn btn-primary" id="emptyAddBtn">+ أضف أول جهاز</button>
+      </div>
+    </section>
+
+    <!-- الخادم السعودي -->
+    <section id="tab-server" class="tab">
+      <div class="banner banner-green">
+        🇸🇦 <span><b>الفكرة ببساطة:</b> لتحصل على IP سعودي تحتاج خادمًا موجودًا فعليًا داخل السعودية. هذه اللوحة تعطيك أمرًا واحدًا يحوّل أي خادم سعودي إلى VPN كامل خاص بك.</span>
+      </div>
+
+      <div class="wizard-steps">
+        <div class="card wizard-step"><div class="w-num">1</div><h4>اختر مزوّدًا</h4><p>Oracle المجاني هو الأسهل للبداية</p></div>
+        <div class="card wizard-step"><div class="w-num">2</div><h4>أنشئ الخادم</h4><p>Ubuntu 22.04+ بمنطقة سعودية</p></div>
+        <div class="card wizard-step"><div class="w-num">3</div><h4>الصق الأمر</h4><p>أمر واحد يثبّت كل شيء تلقائيًا</p></div>
+        <div class="card wizard-step"><div class="w-num">4</div><h4>أضف أجهزتك</h4><p>امسح QR من تبويب أجهزتي</p></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><span class="emoji">☁️</span>1) أنشئ خادمًا سعوديًا مجانيًا</div>
+          <ol class="guide-steps">
+            <li><div class="g-text">سجّل في <a href="https://www.oracle.com/cloud/free/" target="_blank" rel="noopener">Oracle Cloud Free Tier</a> واختر منطقة <b>جدة (Jeddah)</b> أو <b>الرياض (Riyadh)</b> كمنطقة رئيسية.</div></li>
+            <li><div class="g-text">أنشئ خادمًا جديدًا: <b>Compute → Instances → Create Instance</b>، واختر صورة <b>Ubuntu 22.04 أو 24.04</b> (خطة Ampere A1 المجانية ممتازة).</div></li>
+            <li><div class="g-text">احفظ المفتاح الخاص SSH وحمّله، ثم اتصل بالخادم: <code class="ltr">ssh -i key.key ubuntu@SERVER_IP</code></div></li>
+            <li><div class="g-text">من لوحة Oracle افتح المنافذ: <b>VCN → Security List → Add Ingress Rules</b> وأضف <b>UDP 51820</b> و<b>TCP 3000</b> من المصدر <code>0.0.0.0/0</code>.</div></li>
+          </ol>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="emoji">⚙️</span>2) شغّل أمر التثبيت</div>
+          <p class="muted" style="font-size:14px;margin-bottom:12px;">الصق هذا الأمر في طرفية الخادم السعودي (SSH). سيثبّت WireGuard ولوحة التحكم ويسلّمك كلمة المرور:</p>
+          <div class="code-box" id="installCmdBox"><button class="copy-btn" data-copy-target="installCmd" title="نسخ">⧉</button><span id="installCmd">curl -fsSL ... | sudo bash</span></div>
+          <p class="muted" style="font-size:13px;margin:14px 0 8px;">أو نزّل السكربت وارفعه للخادم يدويًا:</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <a class="btn btn-ghost btn-sm" href="/install.sh" download>⬇ تحميل سكربت التثبيت</a>
+            <button class="btn btn-ghost btn-sm" id="ghCmdBtn">أمر GitHub البديل</button>
+          </div>
+          <div class="code-box hidden" id="ghCmdBox" style="margin-top:12px;"><button class="copy-btn" data-copy-target="ghCmd" title="نسخ">⧉</button><span id="ghCmd">curl -fsSL https://raw.githubusercontent.com/mohammedsabryalfiqi/Saudia-vpn/main/scripts/install-wireguard.sh | sudo bash</span></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><span class="emoji">✅</span>3) قائمة تحقق سريعة</div>
+          <ul class="checklist">
+            <li>الخادم في منطقة سعودية (جدة / الرياض / الدمام).</li>
+            <li>منفذ <b>UDP 51820</b> مفتوح في الجدار الناري السحابي ولوحة المزود.</li>
+            <li>منفذ <b>TCP 3000</b> مفتوح للوصول إلى لوحة التحكم.</li>
+            <li>ظهرت رسالة «تم التثبيت بنجاح» وكلمة المرور في نهاية السكربت.</li>
+            <li>فتحت اللوحة على <code class="ltr">http://SERVER_IP:3000</code> وسجلت الدخول.</li>
+            <li>أضفت جهازًا ومسحت QR بتطبيق WireGuard ثم فعّلته.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="emoji">🧠</span>ملاحظات مهمة</div>
+          <ul class="checklist">
+            <li>بعض منصات البث تحظر عناوين مراكز البيانات — جرّب منطقة أو مزودًا آخر عند الحاجة.</li>
+            <li>بعد التثبيت، افتح لوحة التحكم <b>على الخادم نفسه</b> (وليس هذه المعاينة) لإدارة أجهزتك الحقيقية.</li>
+            <li>غيّر كلمة المرور فورًا من الإعدادات، وفعّل HTTPS لاحقًا إن أردت.</li>
+            <li>النظام مفتوح المصدر بالكامل — راجع الكود على GitHub قبل التثبيت إن أحببت.</li>
+            <li>للراوتر: استخدم ملف الإعداد نفسه على راوتر يدعم WireGuard (مثل OpenWrt أو GL.iNet).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- أدلة التوصيل -->
+    <section id="tab-guides" class="tab">
+      <div class="pills" id="guidePills"></div>
+      <div class="card">
+        <div class="card-title"><span class="emoji" id="guideIcon">📱</span><span id="guideTitle">التوصيل من الجهاز</span></div>
+        <ol class="guide-steps" id="guideSteps"></ol>
+        <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;" id="guideLinks"></div>
+      </div>
+    </section>
+
+    <!-- فحص الاتصال -->
+    <section id="tab-check" class="tab">
+      <div class="card check-hero">
+        <div class="big-ico">🌍</div>
+        <h3 style="font-size:21px;font-weight:900;margin-bottom:8px;">هل تتصفح الآن من السعودية؟</h3>
+        <p class="muted" style="max-width:560px;margin:0 auto 22px;font-size:14.5px;">
+          نفحص عنوان IP الخاص بجهازك (من متصفحك مباشرة) ونخبرك إن كان سعوديًا.
+          شغّل WireGuard أولًا ثم اضغط الفحص للتأكد.
+        </p>
+        <button class="btn btn-primary btn-lg" id="checkIpBtn">🔎 افحص IP الحالي</button>
+        <div class="check-result hidden" id="checkResult">
+          <div class="ip-big" id="checkIp">—</div>
+          <div class="loc" id="checkLoc">—</div>
+          <div class="badge" id="checkIsp">—</div>
+          <div class="verdict" id="checkVerdict"></div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:16px;">
+        <div class="card">
+          <div class="card-title"><span class="emoji">🧪</span>اختبارات إضافية</div>
+          <ul class="checklist">
+            <li>اختبار تسريب DNS: <a href="https://www.dnsleaktest.com/" target="_blank" rel="noopener">dnsleaktest.com</a></li>
+            <li>فحص شامل للخصوصية: <a href="https://whoer.net/" target="_blank" rel="noopener">whoer.net</a></li>
+            <li>تأكد أن خانة AllowedIPs في التطبيق تساوي <code class="ltr">0.0.0.0/0, ::/0</code></li>
+            <li>أوقف أي VPN أو بروكسي آخر قبل الفحص لتجنب التعارض.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="emoji">🛠️</span>لا يظهر IP سعودي؟</div>
+          <ul class="checklist">
+            <li>تأكد أن النفق مفعّل (مفتاح التشغيل أخضر في تطبيق WireGuard).</li>
+            <li>افتح منفذ UDP 51820 في الجدار الناري السحابي — أشهر سبب للمشاكل.</li>
+            <li>تأكد أن الخادم نفسه في منطقة سعودية وليس منطقة أخرى.</li>
+            <li>أعد استيراد ملف الإعداد بعد أي تغيير في الإعدادات.</li>
+            <li>أعد تشغيل الخادم أو خدمة WireGuard: <code class="ltr">sudo systemctl restart wg-quick@wg0</code></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- الإعدادات -->
+    <section id="tab-settings" class="tab">
+      <div class="settings-grid">
+        <div class="card">
+          <div class="card-title"><span class="emoji">🌐</span>إعدادات الشبكة</div>
+          <form id="settingsForm">
+            <div class="field">
+              <label for="setEndpoint">عنوان الخادم السعودي (IP أو نطاق)</label>
+              <input class="input ltr" id="setEndpoint" placeholder="مثال: 158.101.230.10 أو vpn.example.com">
+              <div class="hint">يُستخدم في ملفات الإعداد التي تولدها اللوحة. في الوضع المباشر يُملأ تلقائيًا.</div>
+            </div>
+            <div class="field">
+              <label for="setPort">منفذ WireGuard (UDP)</label>
+              <input class="input ltr" id="setPort" type="number" min="1" max="65535" value="51820">
+            </div>
+            <div class="field">
+              <label for="setDns">خوادم DNS</label>
+              <input class="input ltr" id="setDns" value="1.1.1.1, 8.8.8.8">
+            </div>
+            <div class="field">
+              <label for="setMtu">MTU (اختياري)</label>
+              <input class="input ltr" id="setMtu" type="number" min="576" max="1500" placeholder="اتركه فارغًا للقيمة التلقائية">
+            </div>
+            <div class="field">
+              <label for="setAllowedIps">AllowedIPs</label>
+              <input class="input ltr" id="setAllowedIps" value="0.0.0.0/0, ::/0">
+              <div class="hint">القيمة الافتراضية تمرر كل حركة جهازك عبر الخادم السعودي.</div>
+            </div>
+            <button class="btn btn-primary" type="submit">💾 حفظ الإعدادات</button>
+          </form>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="card">
+            <div class="card-title"><span class="emoji">🔑</span>تغيير كلمة المرور</div>
+            <form id="passwordForm">
+              <div class="field">
+                <label for="pwCurrent">كلمة المرور الحالية</label>
+                <input class="input" id="pwCurrent" type="password" autocomplete="current-password">
+              </div>
+              <div class="field">
+                <label for="pwNext">كلمة المرور الجديدة</label>
+                <input class="input" id="pwNext" type="password" autocomplete="new-password" minlength="8">
+              </div>
+              <button class="btn btn-ghost" type="submit">تحديث كلمة المرور</button>
+            </form>
+          </div>
+          <div class="card" id="dangerCard">
+            <div class="card-title"><span class="emoji">🧹</span>منطقة التجربة</div>
+            <p class="muted" style="font-size:13.5px;margin-bottom:14px;">حذف كل الأجهزة التجريبية وتصفير الإحصائيات (وضع المعاينة فقط).</p>
+            <button class="btn btn-danger" id="resetDemoBtn">تصفير البيانات التجريبية</button>
+          </div>
+          <div class="card">
+            <div class="card-title"><span class="emoji">ℹ️</span>عن المنصة</div>
+            <div class="kv">
+              <div class="kv-row"><span class="k">الإصدار</span><span class="v" id="aboutVersion">—</span></div>
+              <div class="kv-row"><span class="k">الوضع</span><span class="v" id="aboutMode">—</span></div>
+              <div class="kv-row"><span class="k">المشروع</span><span class="v"><a href="https://github.com/mohammedsabryalfiqi/Saudia-vpn" target="_blank" rel="noopener">GitHub</a></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="modalRoot"></div>
+<div id="toastRoot" class="toast-root"></div>
+
+<script src="/js/common.js"></script>
+<script src="/js/dashboard.js"></script>
+</body>
+</html>
