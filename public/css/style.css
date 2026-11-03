@@ -236,6 +236,10 @@ code, .mono { font-family: var(--mono); direction: ltr; unicode-bidi: embed; }
 .provider-card .p-region { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; }
 .provider-card .p-tag { font-size: 12px; }
 .provider-card.featured { border-color: rgba(34, 197, 94, 0.5); }
+.method-card { cursor: pointer; text-align: center; font-family: inherit; color: inherit; }
+.method-card.active { border-color: rgba(34, 197, 94, 0.65); box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12); }
+.method-card .p-tag { display: inline-block; margin-top: 6px; }
+.server-method { animation: fadeIn 0.25s ease; }
 .provider-card .ribbon {
   position: absolute; top: -11px; inset-inline-start: 50%; transform: translateX(50%);
   background: linear-gradient(135deg, var(--green-2), var(--green-dark)); color: #fff;

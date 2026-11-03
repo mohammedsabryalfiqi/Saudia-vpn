@@ -2,7 +2,7 @@
 (() => {
   const { $, $$, esc, fmtBytes, timeAgo, fmtUptime, toast, copy, download, token, setToken, api } = window.SV;
 
-  const state = { info: null, status: null, peers: [], tab: 'overview', guide: 'android', polling: null };
+  const state = { info: null, status: null, peers: [], tab: 'overview', guide: 'android', method: 'tailscale', polling: null };
 
   const PLATFORMS = {
     android: { label: 'أندرويد', icon: '🤖' },
@@ -126,7 +126,8 @@
     renderOverview();
     renderDevices();
     fillSettings();
-    renderInstallCmd();
+    renderServerCommands();
+    renderServerMethod();
     renderGuidePills();
     renderGuide(state.guide);
   }
@@ -396,8 +397,29 @@
   }
 
   /* ================= الخادم ================= */
-  function renderInstallCmd() {
-    $('#installCmd').textContent = `curl -fsSL "${location.origin}/install.sh" | sudo bash`;
+  function renderServerCommands() {
+    const origin = location.origin;
+    const wireguard = $('#installCmd');
+    const tailscale = $('#tailscaleCmd');
+    const gcloud = $('#gcloudCmd');
+    if (wireguard) wireguard.textContent = `curl -fsSL "${origin}/install.sh" | sudo bash`;
+    if (tailscale) tailscale.textContent = `curl -fsSL "${origin}/tailscale-exit.sh" | sudo bash`;
+    if (gcloud) gcloud.textContent = `curl -fsSL "${origin}/google-cloud.sh" | bash`;
+  }
+
+  function renderServerMethod() {
+    $$('.method-card').forEach((card) => {
+      card.classList.toggle('active', card.dataset.method === state.method);
+    });
+    $$('.server-method').forEach((section) => {
+      section.classList.toggle('hidden', section.id !== 'method-' + state.method);
+    });
+  }
+
+  function setServerMethod(method) {
+    if (!['tailscale', 'gcloud', 'wireguard'].includes(method)) return;
+    state.method = method;
+    renderServerMethod();
   }
 
   /* ================= الأدلة ================= */
@@ -556,7 +578,7 @@
         });
         toast('تم حفظ الإعدادات ✓', 'ok');
         await refreshData();
-        renderInstallCmd();
+        renderServerCommands();
       } catch (err) { toast(err.message, 'err'); }
     });
 
@@ -614,6 +636,8 @@
         if (goto.dataset.action === 'add') setTimeout(openAddModal, 150);
         return;
       }
+      const method = e.target.closest('[data-method]');
+      if (method) { setServerMethod(method.dataset.method); return; }
       const guide = e.target.closest('[data-guide]');
       if (guide) { renderGuide(guide.dataset.guide); return; }
       const qr = e.target.closest('[data-qr]');

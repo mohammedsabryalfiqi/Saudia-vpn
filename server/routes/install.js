@@ -37,6 +37,32 @@ module.exports = function createInstallRouter(ctx) {
       .send(script);
   });
 
+  /** سكربت تحويل جهاز Linux داخل السعودية إلى Tailscale Exit Node */
+  router.get('/tailscale-exit.sh', (req, res) => {
+    const file = path.join(config.ROOT, 'scripts', 'setup-tailscale-exit.sh');
+    try {
+      const script = fs.readFileSync(file, 'utf8');
+      res.type('text/x-shellscript; charset=utf-8')
+        .set('Content-Disposition', 'attachment; filename="saudia-tailscale-exit.sh"')
+        .send(script);
+    } catch {
+      res.status(500).type('text/plain').send('تعذر قراءة سكربت Tailscale');
+    }
+  });
+
+  /** سكربت مساعد لإنشاء خادم Google Cloud في الدمام */
+  router.get('/google-cloud.sh', (req, res) => {
+    const file = path.join(config.ROOT, 'scripts', 'setup-google-cloud.sh');
+    try {
+      const script = fs.readFileSync(file, 'utf8');
+      res.type('text/x-shellscript; charset=utf-8')
+        .set('Content-Disposition', 'attachment; filename="saudia-google-cloud.sh"')
+        .send(script);
+    } catch {
+      res.status(500).type('text/plain').send('تعذر قراءة سكربت Google Cloud');
+    }
+  });
+
   /** حزمة اللوحة كاملة (بدون بيانات أو أسرار) لينزّلها السكربت على الخادم السعودي */
   router.get('/panel.tar.gz', (req, res) => {
     const tmp = path.join(os.tmpdir(), `saudia-panel-${Date.now()}.tar.gz`);

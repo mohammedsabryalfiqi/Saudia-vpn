@@ -119,59 +119,151 @@
     <!-- الخادم السعودي -->
     <section id="tab-server" class="tab">
       <div class="banner banner-green">
-        🇸🇦 <span><b>الفكرة ببساطة:</b> لتحصل على IP سعودي تحتاج خادمًا موجودًا فعليًا داخل السعودية. هذه اللوحة تعطيك أمرًا واحدًا يحوّل أي خادم سعودي إلى VPN كامل خاص بك.</span>
+        🇸🇦 <span><b>اختر الطريقة الأنسب لك:</b> لا يوجد خادم سعودي مجاني دائم بدون شروط. أضفنا بدائل أسهل من Oracle: جهاز سعودي عبر Tailscale، أو تجربة Google Cloud، أو أي VPS سعودي.</span>
       </div>
 
-      <div class="wizard-steps">
-        <div class="card wizard-step"><div class="w-num">1</div><h4>اختر مزوّدًا</h4><p>Oracle المجاني هو الأسهل للبداية</p></div>
-        <div class="card wizard-step"><div class="w-num">2</div><h4>أنشئ الخادم</h4><p>Ubuntu 22.04+ بمنطقة سعودية</p></div>
-        <div class="card wizard-step"><div class="w-num">3</div><h4>الصق الأمر</h4><p>أمر واحد يثبّت كل شيء تلقائيًا</p></div>
-        <div class="card wizard-step"><div class="w-num">4</div><h4>أضف أجهزتك</h4><p>امسح QR من تبويب أجهزتي</p></div>
+      <div class="providers-grid" style="margin-bottom:22px;">
+        <button type="button" class="card provider-card method-card active" data-method="tailscale">
+          <div class="p-logo">🟢</div>
+          <h3>Tailscale</h3>
+          <div class="p-region">مجاني شخصيًا • بدون بطاقة</div>
+          <span class="badge badge-green p-tag">يحتاج جهازًا داخل السعودية</span>
+        </button>
+        <button type="button" class="card provider-card method-card" data-method="gcloud">
+          <div class="p-logo">☁️</div>
+          <h3>Google Cloud</h3>
+          <div class="p-region">الدمام me-central2</div>
+          <span class="badge badge-blue p-tag">تجربة 90 يومًا • بطاقة تحقق</span>
+        </button>
+        <button type="button" class="card provider-card method-card" data-method="wireguard">
+          <div class="p-logo">🖥️</div>
+          <h3>أي VPS سعودي</h3>
+          <div class="p-region">WireGuard + لوحتنا</div>
+          <span class="badge p-tag">Oracle / مزود محلي / غيره</span>
+        </button>
       </div>
 
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-title"><span class="emoji">☁️</span>1) أنشئ خادمًا سعوديًا مجانيًا</div>
-          <ol class="guide-steps">
-            <li><div class="g-text">سجّل في <a href="https://www.oracle.com/cloud/free/" target="_blank" rel="noopener">Oracle Cloud Free Tier</a> واختر منطقة <b>جدة (Jeddah)</b> أو <b>الرياض (Riyadh)</b> كمنطقة رئيسية.</div></li>
-            <li><div class="g-text">أنشئ خادمًا جديدًا: <b>Compute → Instances → Create Instance</b>، واختر صورة <b>Ubuntu 22.04 أو 24.04</b> (خطة Ampere A1 المجانية ممتازة).</div></li>
-            <li><div class="g-text">احفظ المفتاح الخاص SSH وحمّله، ثم اتصل بالخادم: <code class="ltr">ssh -i key.key ubuntu@SERVER_IP</code></div></li>
-            <li><div class="g-text">من لوحة Oracle افتح المنافذ: <b>VCN → Security List → Add Ingress Rules</b> وأضف <b>UDP 51820</b> و<b>TCP 3000</b> من المصدر <code>0.0.0.0/0</code>.</div></li>
-          </ol>
+      <!-- الطريقة 1: Tailscale -->
+      <div id="method-tailscale" class="server-method">
+        <div class="banner">
+          💡 <span><b>الأسهل والمجاني:</b> إذا عندك جهاز داخل السعودية (كمبيوتر، Raspberry Pi، أو جهاز صديق/قريب بإذنه)، حوّله إلى مخرج VPN عبر Tailscale. الخطة الشخصية مجانية، ولا تحتاج بطاقة بنكية ولا فتح منافذ غالبًا.</span>
         </div>
-        <div class="card">
-          <div class="card-title"><span class="emoji">⚙️</span>2) شغّل أمر التثبيت</div>
-          <p class="muted" style="font-size:14px;margin-bottom:12px;">الصق هذا الأمر في طرفية الخادم السعودي (SSH). سيثبّت WireGuard ولوحة التحكم ويسلّمك كلمة المرور:</p>
-          <div class="code-box" id="installCmdBox"><button class="copy-btn" data-copy-target="installCmd" title="نسخ">⧉</button><span id="installCmd">curl -fsSL ... | sudo bash</span></div>
-          <p class="muted" style="font-size:13px;margin:14px 0 8px;">أو نزّل السكربت وارفعه للخادم يدويًا:</p>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <a class="btn btn-ghost btn-sm" href="/install.sh" download>⬇ تحميل سكربت التثبيت</a>
-            <button class="btn btn-ghost btn-sm" id="ghCmdBtn">أمر GitHub البديل</button>
+        <div class="wizard-steps">
+          <div class="card wizard-step"><div class="w-num">1</div><h4>حساب Tailscale</h4><p>سجّل ببريدك الشخصي واختر الخطة المجانية</p></div>
+          <div class="card wizard-step"><div class="w-num">2</div><h4>جهّز الجهاز السعودي</h4><p>شغّل أمرًا واحدًا على جهاز Linux داخل السعودية</p></div>
+          <div class="card wizard-step"><div class="w-num">3</div><h4>فعّل Exit Node</h4><p>من لوحة Tailscale اسمح للجهاز كمخرج</p></div>
+          <div class="card wizard-step"><div class="w-num">4</div><h4>اتصل من أجهزتك</h4><p>اختر Exit Node ثم افحص IP</p></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title"><span class="emoji">🟢</span>الخطوات بالتفصيل</div>
+            <ol class="guide-steps">
+              <li><div class="g-text">أنشئ حسابًا في <a href="https://login.tailscale.com/start" target="_blank" rel="noopener">Tailscale</a> واختر الخطة الشخصية المجانية.</div></li>
+              <li><div class="g-text">على جهاز Linux داخل السعودية، شغّل الأمر المجاور. سيثبّت Tailscale ويعلن الجهاز كـ Exit Node.</div></li>
+              <li><div class="g-text">افتح <a href="https://login.tailscale.com/admin/machines" target="_blank" rel="noopener">Machines</a> في لوحة Tailscale، اختر الجهاز، ثم <b>Edit route settings ← Use as exit node</b>.</div></li>
+              <li><div class="g-text">على جوالك/لابتوبك ثبّت Tailscale، سجل بنفس الحساب، ثم من <b>Exit Node</b> اختر الجهاز السعودي.</div></li>
+              <li><div class="g-text">ارجع لتبويب <b>فحص الاتصال</b> وتأكد أن IP أصبح سعوديًا 🇸</div></li>
+            </ol>
           </div>
-          <div class="code-box hidden" id="ghCmdBox" style="margin-top:12px;"><button class="copy-btn" data-copy-target="ghCmd" title="نسخ">⧉</button><span id="ghCmd">curl -fsSL https://raw.githubusercontent.com/mohammedsabryalfiqi/Saudia-vpn/main/scripts/install-wireguard.sh | sudo bash</span></div>
+          <div class="card">
+            <div class="card-title"><span class="emoji">⚙️</span>أمر التجهيز على الجهاز السعودي</div>
+            <p class="muted" style="font-size:14px;margin-bottom:12px;">شغّله على Ubuntu / Debian / Raspberry Pi OS داخل السعودية:</p>
+            <div class="code-box"><button class="copy-btn" data-copy-target="tailscaleCmd" title="نسخ">⧉</button><span id="tailscaleCmd">curl -fsSL ... | sudo bash</span></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+              <a class="btn btn-ghost btn-sm" href="/tailscale-exit.sh" download>⬇ تحميل السكربت</a>
+              <a class="btn btn-ghost btn-sm" href="https://tailscale.com/download" target="_blank" rel="noopener">تحميل Tailscale للأجهزة</a>
+            </div>
+            <div class="banner banner-green" style="margin-top:16px;margin-bottom:0;">
+              ✅ <span>مناسب إذا كان لديك جهاز دائم التشغيل داخل السعودية. لا تشارك جهازًا غير مخوّل، واستخدمه وفق شروط الخدمة.</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="grid-2">
+      <!-- الطريقة 2: Google Cloud -->
+      <div id="method-gcloud" class="server-method hidden">
+        <div class="banner">
+          ☁️ <span><b>تجربة سحابية:</b> Google Cloud يعطي رصيدًا تجريبيًا 300$ لمدة 90 يومًا، ويوجد منطقة الدمام <code>me-central2</code>. يتطلب بطاقة تحقق، وليس مجانيًا دائمًا. احذف الخادم بعد التجربة لتجنب الرسوم.</span>
+        </div>
+        <div class="wizard-steps">
+          <div class="card wizard-step"><div class="w-num">1</div><h4>فعّل التجربة</h4><p>حساب Google Cloud جديد + بطاقة تحقق</p></div>
+          <div class="card wizard-step"><div class="w-num">2</div><h4>افتح Cloud Shell</h4><p>من لوحة Google Cloud اضغط أيقونة الطرفية</p></div>
+          <div class="card wizard-step"><div class="w-num">3</div><h4>شغّل المساعد</h4><p>ينشئ VM في الدمام وقواعد الجدار الناري</p></div>
+          <div class="card wizard-step"><div class="w-num">4</div><h4>ثبّت اللوحة</h4><p>ادخل SSH وشغّل أمر WireGuard</p></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title"><span class="emoji">☁️</span>الخطوات بالتفصيل</div>
+            <ol class="guide-steps">
+              <li><div class="g-text">سجّل في <a href="https://cloud.google.com/free" target="_blank" rel="noopener">Google Cloud Free Trial</a> وأكمل تحقق البطاقة.</div></li>
+              <li><div class="g-text">أنشئ مشروعًا أو استخدم مشروعًا قائمًا، ثم افتح <b>Cloud Shell</b>.</div></li>
+              <li><div class="g-text">شغّل الأمر المجاور. سينشئ خادمًا في الدمام ويفتح UDP 51820 وTCP 3000.</div></li>
+              <li><div class="g-text">ادخل للخادم عبر SSH كما يطبع السكربت، ثم شغّل أمر تثبيت WireGuard.</div></li>
+              <li><div class="g-text">افتح اللوحة على <code class="ltr">http://SERVER_IP:3000</code> وأضف أجهزتك.</div></li>
+            </ol>
+          </div>
+          <div class="card">
+            <div class="card-title"><span class="emoji">⚙️</span>أمر Cloud Shell</div>
+            <p class="muted" style="font-size:14px;margin-bottom:12px;">شغّله داخل Google Cloud Shell بعد تسجيل الدخول:</p>
+            <div class="code-box"><button class="copy-btn" data-copy-target="gcloudCmd" title="نسخ">⧉</button><span id="gcloudCmd">curl -fsSL ... | bash</span></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+              <a class="btn btn-ghost btn-sm" href="/google-cloud.sh" download>⬇ تحميل السكربت</a>
+              <a class="btn btn-ghost btn-sm" href="https://console.cloud.google.com/" target="_blank" rel="noopener">فتح Google Cloud</a>
+            </div>
+            <div class="banner" style="margin-top:16px;margin-bottom:0;">
+              ⚠️ <span>لتجنب الرسوم بعد التجربة: احذف الـ VM وقواعد الجدار الناري كما يطبع السكربت في النهاية.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- الطريقة 3: أي VPS سعودي -->
+      <div id="method-wireguard" class="server-method hidden">
+        <div class="banner banner-green">
+          🖥️ <span><b>تحكم كامل:</b> استخدم أي خادم سعودي (Oracle، مزود محلي، أو غيره) وثبّت WireGuard + لوحتنا بأمر واحد.</span>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title"><span class="emoji">☁️</span>1) جهّز خادمًا سعوديًا</div>
+            <ol class="guide-steps">
+              <li><div class="g-text">اختر مزودًا بمنطقة سعودية: جدة / الرياض / الدمام.</div></li>
+              <li><div class="g-text">أنشئ خادم <b>Ubuntu 22.04 / 24.04</b> أو Debian 11/12.</div></li>
+              <li><div class="g-text">افتح <b>UDP 51820</b> و<b>TCP 3000</b> في الجدار الناري السحابي.</div></li>
+              <li><div class="g-text">ادخل عبر SSH، ثم شغّل أمر التثبيت المجاور.</div></li>
+            </ol>
+          </div>
+          <div class="card">
+            <div class="card-title"><span class="emoji">⚙️</span>2) شغّل أمر التثبيت</div>
+            <p class="muted" style="font-size:14px;margin-bottom:12px;">الصق هذا الأمر في طرفية الخادم السعودي (SSH):</p>
+            <div class="code-box" id="installCmdBox"><button class="copy-btn" data-copy-target="installCmd" title="نسخ">⧉</button><span id="installCmd">curl -fsSL ... | sudo bash</span></div>
+            <p class="muted" style="font-size:13px;margin:14px 0 8px;">أو نزّل السكربت وارفعه للخادم يدويًا:</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <a class="btn btn-ghost btn-sm" href="/install.sh" download>⬇ تحميل سكربت التثبيت</a>
+              <button class="btn btn-ghost btn-sm" id="ghCmdBtn">أمر GitHub البديل</button>
+            </div>
+            <div class="code-box hidden" id="ghCmdBox" style="margin-top:12px;"><button class="copy-btn" data-copy-target="ghCmd" title="نسخ">⧉</button><span id="ghCmd">curl -fsSL https://raw.githubusercontent.com/mohammedsabryalfiqi/Saudia-vpn/main/scripts/install-wireguard.sh | sudo bash</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:16px;">
         <div class="card">
-          <div class="card-title"><span class="emoji">✅</span>3) قائمة تحقق سريعة</div>
+          <div class="card-title"><span class="emoji">✅</span>قائمة تحقق سريعة</div>
           <ul class="checklist">
-            <li>الخادم في منطقة سعودية (جدة / الرياض / الدمام).</li>
-            <li>منفذ <b>UDP 51820</b> مفتوح في الجدار الناري السحابي ولوحة المزود.</li>
-            <li>منفذ <b>TCP 3000</b> مفتوح للوصول إلى لوحة التحكم.</li>
-            <li>ظهرت رسالة «تم التثبيت بنجاح» وكلمة المرور في نهاية السكربت.</li>
-            <li>فتحت اللوحة على <code class="ltr">http://SERVER_IP:3000</code> وسجلت الدخول.</li>
-            <li>أضفت جهازًا ومسحت QR بتطبيق WireGuard ثم فعّلته.</li>
+            <li>الخادم أو الجهاز المخرج موجود فعليًا داخل السعودية.</li>
+            <li>لـ WireGuard: منفذ <b>UDP 51820</b> مفتوح في الجدار الناري السحابي.</li>
+            <li>لـ Tailscale: تم تفعيل <b>Use as exit node</b> من لوحة Tailscale.</li>
+            <li>لـ Google Cloud: احذف الموارد بعد التجربة لتجنب الرسوم.</li>
+            <li>بعد الاتصال، استخدم تبويب <b>فحص الاتصال</b> للتأكد من IP السعودي.</li>
           </ul>
         </div>
         <div class="card">
           <div class="card-title"><span class="emoji">🧠</span>ملاحظات مهمة</div>
           <ul class="checklist">
-            <li>بعض منصات البث تحظر عناوين مراكز البيانات — جرّب منطقة أو مزودًا آخر عند الحاجة.</li>
-            <li>بعد التثبيت، افتح لوحة التحكم <b>على الخادم نفسه</b> (وليس هذه المعاينة) لإدارة أجهزتك الحقيقية.</li>
-            <li>غيّر كلمة المرور فورًا من الإعدادات، وفعّل HTTPS لاحقًا إن أردت.</li>
-            <li>النظام مفتوح المصدر بالكامل — راجع الكود على GitHub قبل التثبيت إن أحببت.</li>
-            <li>للراوتر: استخدم ملف الإعداد نفسه على راوتر يدعم WireGuard (مثل OpenWrt أو GL.iNet).</li>
+            <li>بعض منصات البث تحظر عناوين مراكز البيانات — IP السكني عبر Tailscale قد يكون أفضل.</li>
+            <li>لا تستخدم جهازًا غير مخوّل، ولا تشارك اتصالًا يخالف شروط الخدمة.</li>
+            <li>غيّر كلمة مرور اللوحة فورًا، وفعّل HTTPS لاحقًا إن أردت.</li>
+            <li>النظام مفتوح المصدر بالكامل — راجع الكود على GitHub قبل التثبيت.</li>
           </ul>
         </div>
       </div>

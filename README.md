@@ -6,8 +6,9 @@
 
 حوّل أي خادم سعودي (VPS) إلى VPN شخصي كامل خلال دقائق: لوحة تحكم عربية، توليد إعدادات WireGuard ورموز QR لأجهزتك، وسكربت تثبيت واحد يجهّز كل شيء تلقائيًا.
 
-> ⚠️ **مهم:** للحصول على IP سعودي حقيقي تحتاج خادمًا موجودًا فعليًا داخل السعودية.
-> هذه المنصة مجانية وتؤتمت كل شيء، وأسهل بداية هي **Oracle Cloud المجاني دائمًا** في منطقة جدة أو الرياض.
+> ⚠️ **مهم:** للحصول على IP سعودي حقيقي تحتاج خادمًا أو جهازًا موجودًا فعليًا داخل السعودية.
+> لا يوجد خادم سعودي مجاني دائم بدون شروط. أضفنا بدائل أسهل من Oracle:
+> **Tailscale** إذا كان لديك جهاز داخل السعودية، أو **تجربة Google Cloud** مؤقتًا، أو أي **VPS سعودي**.
 
 ---
 
@@ -22,29 +23,66 @@
 - 🔐 **خصوصية** — لا سجلات تصفح، الخادم ملكك، كلمات المرور مخزنة بتشفير scrypt
 - 🧪 **وضع معاينة تجريبي** — جرّب اللوحة كاملة قبل امتلاك خادم
 
-## 🚀 البداية السريعة
+## 🚀 البداية السريعة — اختر طريقة
 
-### 1) احصل على خادم سعودي
-
-| المزود | المنطقة | التكلفة |
+| الطريقة | متى تناسبك؟ | التكلفة/الشروط |
 |---|---|---|
-| ⭐ Oracle Cloud | جدة / الرياض | **مجاني دائمًا (Always Free)** |
-| Google Cloud | الدمام `me-central2` | رصيد تجريبي 300$ |
-| Alibaba Cloud | الرياض `me-central1` | خطط مرنة |
-| مزود محلي | STC / Mobily / Sahara Net | حسب المزود |
+| ⭐ **Tailscale Exit Node** | عندك جهاز داخل السعودية (كمبيوتر/Raspberry Pi) | مجاني شخصيًا، بدون بطاقة، يحتاج جهازًا سعوديًا |
+| **Google Cloud** | تريد خادمًا سحابيًا مؤقتًا في الدمام | تجربة 90 يومًا / 300$، بطاقة تحقق، ليست دائمة |
+| **أي VPS سعودي** | تريد تحكم كاملًا عبر WireGuard | حسب المزود (Oracle/محلي/غيره) |
 
-أنشئ خادم **Ubuntu 22.04 / 24.04** (خطة Ampere A1 المجانية في Oracle ممتازة).
+### الطريقة 1: Tailscale — الأسهل والمجاني شخصيًا
 
-### 2) افتح المنافذ في لوحة المزود
+1. أنشئ حسابًا في [Tailscale](https://login.tailscale.com/start) واختر الخطة الشخصية المجانية.
+2. على جهاز Linux داخل السعودية، شغّل:
 
-- **UDP 51820** — لحركة WireGuard
-- **TCP 3000** — للوحة التحكم
+```bash
+curl -fsSL "http://YOUR_PANEL:3000/tailscale-exit.sh" | sudo bash
+```
 
-(في Oracle: `VCN → Security List → Add Ingress Rules`، المصدر `0.0.0.0/0`)
+أو من المستودع:
 
-### 3) شغّل أمر التثبيت على الخادم
+```bash
+sudo bash scripts/setup-tailscale-exit.sh
+```
 
-من تبويب «الخادم السعودي» في اللوحة، انسخ الأمر والصقه في SSH:
+3. من لوحة Tailscale: **Machines ← الجهاز ← Edit route settings ← Use as exit node**.
+4. على جوالك/لابتوبك ثبّت Tailscale، سجل بنفس الحساب، ثم اختر الجهاز السعودي من **Exit Node**.
+5. استخدم **فحص الاتصال** للتأكد أن IP سعودي.
+
+> لا يحتاج فتح منافذ في الراوتر غالبًا. استخدم جهازًا تملكه أو لديك إذن صريح باستخدامه.
+
+### الطريقة 2: Google Cloud — تجربة مؤقتة في الدمام
+
+1. فعّل [Google Cloud Free Trial](https://cloud.google.com/free) (يتطلب بطاقة تحقق).
+2. افتح **Cloud Shell** وشغّل:
+
+```bash
+curl -fsSL "http://YOUR_PANEL:3000/google-cloud.sh" | bash
+```
+
+أو من المستودع:
+
+```bash
+bash scripts/setup-google-cloud.sh
+```
+
+3. سينشئ السكربت VM في `me-central2` ويفتح UDP 51820 وTCP 3000.
+4. ادخل SSH كما يطبع السكربت، ثم ثبّت WireGuard:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/mohammedsabryalfiqi/Saudia-vpn/main/scripts/install-wireguard.sh | sudo bash
+```
+
+5. افتح اللوحة على `http://SERVER_IP:3000` وأضف أجهزتك.
+
+> ⚠️ احذف الـ VM وقواعد الجدار الناري بعد التجربة لتجنب الرسوم. الأوامر يطبعها السكربت في النهاية.
+
+### الطريقة 3: أي VPS سعودي — WireGuard + لوحتنا
+
+1. أنشئ خادم **Ubuntu 22.04 / 24.04** أو Debian 11/12 في منطقة سعودية.
+2. افتح **UDP 51820** و**TCP 3000** في الجدار الناري السحابي.
+3. شغّل أمر التثبيت:
 
 ```bash
 curl -fsSL "http://YOUR_PANEL:3000/install.sh" | sudo bash
@@ -56,14 +94,7 @@ curl -fsSL "http://YOUR_PANEL:3000/install.sh" | sudo bash
 curl -fsSL https://raw.githubusercontent.com/mohammedsabryalfiqi/Saudia-vpn/main/scripts/install-wireguard.sh | sudo bash
 ```
 
-سيثبّت السكربت: WireGuard، تمرير الحزم، NAT، الجدار الناري، Node.js، اللوحة كخدمة systemd — ويطبع لك رابط اللوحة وكلمة المرور.
-
-### 4) أضف أجهزتك واتصل
-
-1. افتح `http://SERVER_IP:3000` وسجّل الدخول
-2. **أجهزتي ← أضف جهازًا** → اختر الاسم والنوع
-3. امسح رمز **QR** بتطبيق WireGuard (أو حمّل ملف `.conf` واستورده)
-4. فعّل النفق، ثم استخدم **فحص الاتصال** للتأكد أن IP سعودي 🇸
+4. افتح `http://SERVER_IP:3000`، سجّل الدخول، أضف جهازًا، امسح QR بتطبيق WireGuard، ثم فعّل النفق.
 
 ---
 
@@ -108,7 +139,9 @@ Saudia-vpn/
 │   ├── js/              # JavaScript
 │   └── assets/          # الشعار والصورة
 ├── scripts/
-│   └── install-wireguard.sh  # سكربت التثبيت التلقائي
+│   ├── install-wireguard.sh     # تثبيت WireGuard + اللوحة على VPS
+│   ├── setup-tailscale-exit.sh  # تحويل جهاز سعودي إلى Tailscale Exit Node
+│   └── setup-google-cloud.sh    # إنشاء VM في الدمام + جدار ناري
 ├── package.json
 └── README.md
 ```
@@ -126,7 +159,9 @@ Saudia-vpn/
 | PATCH/DELETE | `/api/peers/:id` | تعديل/حذف جهاز |
 | PUT | `/api/settings` | إعدادات الشبكة |
 | POST | `/api/password` | تغيير كلمة المرور |
-| GET | `/install.sh` | سكربت تثبيت مخصص |
+| GET | `/install.sh` | سكربت تثبيت WireGuard مخصص |
+| GET | `/tailscale-exit.sh` | سكربت Tailscale Exit Node |
+| GET | `/google-cloud.sh` | سكربت مساعد Google Cloud |
 | GET | `/panel.tar.gz` | حزمة اللوحة بدون بيانات/أسرار |
 
 ## 🔒 ملاحظات أمنية
@@ -143,6 +178,8 @@ Saudia-vpn/
 |---|---|
 | لا يوجد اتصال رغم تفعيل النفق | افتح **UDP 51820** في الجدار الناري السحابي (Security List) |
 | اللوحة لا تفتح من الخارج | افتح **TCP 3000** في الجدار الناري السحابي |
+| Tailscale لا يظهر كخيار Exit Node | فعّل **Use as exit node** من لوحة Tailscale، وتأكد أن الجهاز داخل السعودية |
+| Google Cloud يطلب رسومًا بعد التجربة | احذف الـ VM وقواعد الجدار الناري كما يطبع السكربت |
 | الموقع المحجوب لا يزال يرفضك | قد يحظر عناوين مراكز البيانات — جرّب منطقة/مزودًا آخر أو IP سكني |
 | تسريب DNS | تأكد أن `AllowedIPs = 0.0.0.0/0, ::/0` وأن DNS داخل النفق |
 | نسيت كلمة المرور | عدّل `ADMIN_PASSWORD` في `/etc/saudia-vpn/panel.env` ثم `sudo systemctl restart saudia-vpn` |
