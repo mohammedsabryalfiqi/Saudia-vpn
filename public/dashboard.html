@@ -47,6 +47,7 @@
     <nav class="side-nav" id="sideNav">
       <button data-tab="overview" class="active"><span class="ico">📊</span>نظرة عامة</button>
       <button data-tab="devices"><span class="ico">📱</span>أجهزتي</button>
+      <button data-tab="ready"><span class="ico">🚀</span>حلول جاهزة</button>
       <button data-tab="server"><span class="ico">🇸🇦</span>الخادم السعودي</button>
       <button data-tab="guides"><span class="ico">📖</span>أدلة التوصيل</button>
       <button data-tab="check"><span class="ico">🌍</span>فحص الاتصال</button>
@@ -71,7 +72,7 @@
     </header>
 
     <div id="demoBanner" class="banner hidden">
-      ⚠️ <span><b>وضع المعاينة:</b> البيانات والأجهزة هنا تجريبية للتجربة فقط، ولا يوجد اتصال سعودي حقيقي بعد. لتفعيل VPN فعلي، ثبّت النظام على خادم داخل السعودية من تبويب <a href="#" data-goto="server">الخادم السعودي</a>.</span>
+      ⚠️ <span><b>وضع المعاينة:</b> البيانات والأجهزة هنا تجريبية فقط. إذا كنت تريد أسهل طريق بدون إعداد خادم، افتح <a href="#" data-goto="ready">الحلول الجاهزة</a>. وإذا تريد خادمك الخاص، افتح <a href="#" data-goto="server">الخادم السعودي</a>.</span>
     </div>
 
     <!-- نظرة عامة -->
@@ -94,9 +95,9 @@
       <div class="card">
         <div class="card-title"><span class="emoji">⚡</span>إجراءات سريعة</div>
         <div class="quick-actions">
-          <button class="quick-action" data-goto="devices" data-action="add"><span class="qa-ico">📱</span>إضافة جهاز جديد</button>
+          <button class="quick-action" data-goto="ready"><span class="qa-ico">🚀</span>حلول جاهزة بسيرفرات حقيقية</button>
           <button class="quick-action" data-goto="check"><span class="qa-ico">🌍</span>فحص IP الحالي</button>
-          <button class="quick-action" data-goto="server"><span class="qa-ico">🇸🇦</span>إعداد خادم سعودي</button>
+          <button class="quick-action" data-goto="server"><span class="qa-ico">🇸🇦</span>إعداد خادم خاص</button>
         </div>
       </div>
     </section>
@@ -114,6 +115,37 @@
         <p>أضف جوالك أو لابتوبك لتحصل على رمز QR وملف إعداد جاهز خلال ثوانٍ.</p>
         <button class="btn btn-primary" id="emptyAddBtn">+ أضف أول جهاز</button>
       </div>
+    </section>
+
+    <!-- حلول جاهزة -->
+    <section id="tab-ready" class="tab">
+      <div class="banner banner-green">
+        🚀 <span><b>الأسهل لك:</b> هذه خدمات خارجية تملك سيرفرات/مواقع سعودية حقيقية. لا تحتاج إعداد خادم ولا أوامر. اشترك من الموقع الرسمي، ثبّت التطبيق، اختر السعودية، ثم افحص IP من هنا.</span>
+      </div>
+      <div class="banner">
+        ⚠️ <span>نحن لا نبيع اشتراكات ولا نأخذ بيانات دفعك. بعض المواقع قد تكون افتراضية أو ترفضها منصات معينة؛ جرّب أكثر من سيرفر واستخدم ضمان الاسترجاع إن لم يناسبك.</span>
+      </div>
+
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title"><span class="emoji">🧭</span>اختيار سريع حسب احتياجك</div>
+        <div class="reco-box">
+          <button class="btn btn-ghost btn-sm" data-reco="easy">أسهل للمبتدئ</button>
+          <button class="btn btn-ghost btn-sm" data-reco="privacy">خصوصية قوية</button>
+          <button class="btn btn-ghost btn-sm" data-reco="refund">تجربة/استرجاع طويل</button>
+          <button class="btn btn-ghost btn-sm" data-reco="streaming">مشاهدة فقط</button>
+          <button class="btn btn-ghost btn-sm" data-reco="static">IP ثابت للبنوك/الأعمال</button>
+        </div>
+        <div class="reco-result hidden" id="recoResult"></div>
+      </div>
+
+      <div class="pills" id="readyFilters">
+        <button class="pill active" data-provider-filter="all">الكل</button>
+        <button class="pill" data-provider-filter="vpn">VPN كامل</button>
+        <button class="pill" data-provider-filter="smartdns">Smart DNS للمشاهدة</button>
+        <button class="pill" data-provider-filter="static">IP ثابت</button>
+      </div>
+      <div id="readyGrid" class="ready-grid"></div>
+      <p class="muted" style="font-size:12.5px;margin-top:14px;" id="readyUpdated"></p>
     </section>
 
     <!-- الخادم السعودي -->
@@ -162,7 +194,7 @@
               <li><div class="g-text">على جهاز Linux داخل السعودية، شغّل الأمر المجاور. سيثبّت Tailscale ويعلن الجهاز كـ Exit Node.</div></li>
               <li><div class="g-text">افتح <a href="https://login.tailscale.com/admin/machines" target="_blank" rel="noopener">Machines</a> في لوحة Tailscale، اختر الجهاز، ثم <b>Edit route settings ← Use as exit node</b>.</div></li>
               <li><div class="g-text">على جوالك/لابتوبك ثبّت Tailscale، سجل بنفس الحساب، ثم من <b>Exit Node</b> اختر الجهاز السعودي.</div></li>
-              <li><div class="g-text">ارجع لتبويب <b>فحص الاتصال</b> وتأكد أن IP أصبح سعوديًا 🇸</div></li>
+              <li><div class="g-text">ارجع لتبويب <b>فحص الاتصال</b> وتأكد أن IP أصبح سعوديًا 🇸🇦🇦</div></li>
             </ol>
           </div>
           <div class="card">

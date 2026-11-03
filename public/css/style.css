@@ -240,6 +240,17 @@ code, .mono { font-family: var(--mono); direction: ltr; unicode-bidi: embed; }
 .method-card.active { border-color: rgba(34, 197, 94, 0.65); box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12); }
 .method-card .p-tag { display: inline-block; margin-top: 6px; }
 .server-method { animation: fadeIn 0.25s ease; }
+.ready-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.ready-card { display: flex; flex-direction: column; gap: 12px; }
+.ready-head { display: flex; align-items: center; gap: 12px; }
+.ready-logo { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 26px; background: linear-gradient(135deg, rgba(34,197,94,.16), rgba(0,108,53,.16)); border: 1px solid rgba(34,197,94,.28); }
+.ready-head h3 { font-size: 17px; font-weight: 800; }
+.ready-head .muted { font-size: 12.5px; }
+.ready-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.ready-card .btn { margin-top: auto; }
+.reco-box { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.reco-result { margin-top: 16px; }
+@media (max-width: 560px) { .ready-grid { grid-template-columns: 1fr; } }
 .provider-card .ribbon {
   position: absolute; top: -11px; inset-inline-start: 50%; transform: translateX(50%);
   background: linear-gradient(135deg, var(--green-2), var(--green-dark)); color: #fff;

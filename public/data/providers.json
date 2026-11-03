@@ -1,0 +1,150 @@
+{
+  "updatedAt": "2026-11-03",
+  "disclaimer": "هذه خدمات خارجية تملك خوادم/مواقع سعودية. نحن لا نبيع اشتراكات ولا نأخذ بيانات دفعك. اشترك من الموقع الرسمي، ثبّت التطبيق، اختر السعودية، ثم افحص IP. بعض المواقع قد تكون افتراضية وقد لا تقبلها كل الخدمات.",
+  "providers": [
+    {
+      "id": "surfshark",
+      "name": "Surfshark",
+      "category": "vpn",
+      "emoji": "🦈",
+      "saudiLabel": "موقع السعودية داخل التطبيق",
+      "cities": ["الرياض"],
+      "trial": "تجربة 7 أيام على الجوال",
+      "refund": "استرجاع خلال 30 يومًا",
+      "devices": "أجهزة غير محدودة",
+      "priceNote": "اشتراك مدفوع",
+      "bestFor": "أسهل خيار شامل لكل الأجهزة",
+      "url": "https://surfshark.com/servers/saudi-arabia",
+      "signup": "https://surfshark.com/order",
+      "download": "https://surfshark.com/download",
+      "steps": [
+        "افتح الموقع الرسمي واشترك أو ابدأ التجربة من تطبيق الجوال.",
+        "ثبّت تطبيق Surfshark على جهازك وسجّل الدخول.",
+        "ابحث داخل التطبيق عن Saudi Arabia أو الرياض واتصل.",
+        "افتح تبويب فحص الاتصال هنا وتأكد أن الدولة SA."
+      ],
+      "caution": "بعض مواقع الدول قد تكون افتراضية؛ افحص IP بعد الاتصال، وجرّب أكثر من سيرفر إذا رفضتك خدمة معينة.",
+      "source": "https://surfshark.com/servers/saudi-arabia"
+    },
+    {
+      "id": "proton",
+      "name": "Proton VPN Plus",
+      "category": "vpn",
+      "emoji": "🛡️",
+      "saudiLabel": "السعودية متاحة في الخطة المدفوعة",
+      "cities": ["السعودية"],
+      "trial": "لا توجد تجربة مجانية للسعودية",
+      "refund": "استرجاع خلال 30 يومًا للخطط المدفوعة",
+      "devices": "حتى 10 أجهزة",
+      "priceNote": "الخطة المجانية لا تشمل السعودية",
+      "bestFor": "خصوصية قوية وتطبيقات موثوقة",
+      "url": "https://protonvpn.com/vpn-servers/saudi-arabia",
+      "signup": "https://protonvpn.com/pricing",
+      "download": "https://protonvpn.com/download",
+      "steps": [
+        "اشترك في خطة مدفوعة مثل VPN Plus؛ الخطة المجانية لا تعطيك سيرفر السعودية.",
+        "ثبّت تطبيق Proton VPN وسجّل الدخول.",
+        "اختر Saudi Arabia من قائمة الدول أو الخريطة واتصل.",
+        "افحص IP من التبويب المخصص هنا."
+      ],
+      "caution": "تأكد أنك على خطة مدفوعة قبل البحث عن السعودية؛ الخطة المجانية لا تشمل هذا الموقع.",
+      "source": "https://protonvpn.com/vpn-servers/saudi-arabia"
+    },
+    {
+      "id": "ipvanish",
+      "name": "IPVanish",
+      "category": "vpn",
+      "emoji": "🌐",
+      "saudiLabel": "السعودية - جدة",
+      "cities": ["جدة"],
+      "trial": "تجربة 7 أيام على iOS/Android",
+      "refund": "استرجاع خلال 30 يومًا للخطط السنوية/طويلة المدة",
+      "devices": "أجهزة غير محدودة",
+      "priceNote": "اشتراك مدفوع",
+      "bestFor": "سيرفر جدة وأجهزة كثيرة",
+      "url": "https://www.ipvanish.com/servers/",
+      "signup": "https://www.ipvanish.com/pricing/",
+      "download": "https://www.ipvanish.com/vpn-setup/",
+      "steps": [
+        "اشترك من الموقع الرسمي أو ابدأ تجربة الجوال إن كانت متاحة.",
+        "ثبّت تطبيق IPVanish وسجّل الدخول.",
+        "اختر Saudi Arabia أو Jeddah من قائمة المواقع واتصل.",
+        "افحص IP وتأكد أن الدولة SA."
+      ],
+      "caution": "قد تكون بعض مواقع المزود محجوبة في دول معينة؛ استخدم التطبيق الرسمي أو شبكة مختلفة إذا لم يفتح الموقع.",
+      "source": "https://www.ipvanish.com/servers/"
+    },
+    {
+      "id": "cyberghost",
+      "name": "CyberGhost",
+      "category": "vpn",
+      "emoji": "👻",
+      "saudiLabel": "الرياض - موقع افتراضي",
+      "cities": ["الرياض"],
+      "trial": "تجربة قصيرة حسب الجهاز",
+      "refund": "استرجاع 45 يومًا للخطط الطويلة، و14 يومًا للشهري",
+      "devices": "حتى 7 أجهزة",
+      "priceNote": "اشتراك مدفوع",
+      "bestFor": "تجربة طويلة نسبيًا قبل الالتزام",
+      "url": "https://www.cyberghostvpn.com/vpn-server/saudi-arabia-vpn",
+      "signup": "https://www.cyberghostvpn.com/en_US/buy/vpn",
+      "download": "https://www.cyberghostvpn.com/en_US/vpn-download",
+      "steps": [
+        "اشترك أو استخدم التجربة المتاحة على جهازك.",
+        "ثبّت تطبيق CyberGhost وسجّل الدخول.",
+        "اختر Saudi Arabia أو Riyadh واتصل.",
+        "افحص IP؛ إذا كان افتراضيًا ورفضتك خدمة معينة جرّب مزودًا آخر."
+      ],
+      "caution": "موقع الرياض معلن كموقع افتراضي عبر دبي؛ قد ينجح مع خدمات كثيرة لكنه ليس مضمونًا لكل المواقع السعودية.",
+      "source": "https://support.cyberghostvpn.com/hc/en-us/articles/214495965-CyberGhost-VPN-s-Virtual-Server-Locations"
+    },
+    {
+      "id": "unlocator",
+      "name": "Unlocator Smart DNS",
+      "category": "smartdns",
+      "emoji": "📺",
+      "saudiLabel": "فتح قنوات/خدمات مدعومة فقط",
+      "cities": ["حسب القناة"],
+      "trial": "تجربة 7 أيام",
+      "refund": "حسب سياسة المزود",
+      "devices": "أجهزة كثيرة عبر DNS",
+      "priceNote": "اشتراك مدفوع بعد التجربة",
+      "bestFor": "مشاهدة فقط بدون تطبيق VPN",
+      "url": "https://unlocator.com/setup/",
+      "signup": "https://unlocator.com/",
+      "download": "https://unlocator.com/setup/",
+      "steps": [
+        "أنشئ حسابًا وفعّل التجربة.",
+        "غيّر DNS في جهازك أو الراوتر إلى العناوين التي يعطيك الحساب.",
+        "افتح الخدمة المدعومة مثل قناة أو منصة مدعومة.",
+        "هذا الخيار لا يغيّر IP لكل المواقع، لذلك لا تعتمد عليه للبنوك أو الخدمات الحكومية."
+      ],
+      "caution": "Smart DNS يفتح خدمات مدعومة فقط ولا يعطي IP سعوديًا لكل التصفح. مناسب للمشاهدة وليس لكل المواقع.",
+      "source": "https://support.unlocator.com/article/263-getting-started-with-unlocator"
+    },
+    {
+      "id": "netspace",
+      "name": "Netspace Static Saudi VPN",
+      "category": "static",
+      "emoji": "🏢",
+      "saudiLabel": "IP سعودي ثابت - الرياض/جدة",
+      "cities": ["الرياض", "جدة"],
+      "trial": "غير معلن",
+      "refund": "حسب سياسة المزود",
+      "devices": "حسب الخطة",
+      "priceNote": "مدفوع وقد يتطلب تحقق هوية",
+      "bestFor": "خدمات تحتاج IP ثابتًا مثل بعض البنوك/الأعمال",
+      "url": "https://www.netspaceindia.com/network-services/vpn-saudi-arabia/",
+      "signup": "https://www.netspaceindia.com/network-services/vpn-saudi-arabia/",
+      "download": "https://www.netspaceindia.com/network-services/vpn-saudi-arabia/",
+      "steps": [
+        "تواصل مع المزود واطلب Saudi Static IP VPN.",
+        "أكمل التحقق والدفع حسب طلبهم.",
+        "استلم إعدادات OpenVPN أو WireGuard وثبّت التطبيق المناسب.",
+        "اتصل ثم افحص IP وتأكد أنه سعودي وثابت."
+      ],
+      "caution": "هذا خيار أعمال/تحقق هوية وقد يكون أغلى وأبطأ في التفعيل. استخدمه فقط إذا كنت تحتاج IP ثابتًا فعلًا.",
+      "source": "https://www.netspaceindia.com/network-services/vpn-saudi-arabia/"
+    }
+  ]
+}

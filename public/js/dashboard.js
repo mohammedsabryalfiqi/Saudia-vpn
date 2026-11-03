@@ -2,7 +2,7 @@
 (() => {
   const { $, $$, esc, fmtBytes, timeAgo, fmtUptime, toast, copy, download, token, setToken, api } = window.SV;
 
-  const state = { info: null, status: null, peers: [], tab: 'overview', guide: 'android', method: 'tailscale', polling: null };
+  const state = { info: null, status: null, peers: [], tab: 'overview', guide: 'android', method: 'tailscale', providers: null, providerFilter: 'all', polling: null };
 
   const PLATFORMS = {
     android: { label: 'أندرويد', icon: '🤖' },
@@ -17,6 +17,7 @@
   const TAB_META = {
     overview: ['نظرة عامة', 'حالة شبكتك السعودية الخاصة'],
     devices: ['أجهزتي', 'أضف وأدر أجهزة عائلتك'],
+    ready: ['حلول جاهزة', 'خدمات خارجية بسيرفرات سعودية بدون إعداد خادم'],
     server: ['الخادم السعودي', 'حوّل أي خادم سعودي إلى VPN خاص بك'],
     guides: ['أدلة التوصيل', 'خطوات التوصيل لكل نوع جهاز'],
     check: ['فحص الاتصال', 'تأكد أنك تتصفح من السعودية فعلًا'],
@@ -119,6 +120,8 @@
     $('#appView').classList.remove('hidden');
     renderAll();
     startPolling();
+    const wanted = new URLSearchParams(location.search).get('tab');
+    switchTab(wanted && TAB_META[wanted] ? wanted : 'ready');
   }
 
   function renderAll() {
@@ -130,6 +133,7 @@
     renderServerMethod();
     renderGuidePills();
     renderGuide(state.guide);
+    renderReady();
   }
 
   function renderMode() {
@@ -396,6 +400,102 @@
     }
   }
 
+  /* ================= حلول جاهزة ================= */
+  const RECOMMENDATIONS = {
+    easy: { title: 'أسهل للمبتدئ', ids: ['surfshark', 'ipvanish'], why: 'تطبيقات جاهزة، اختر السعودية واتصل. مناسب إذا كنت لا تريد أوامر أو إعداد خادم.' },
+    privacy: { title: 'خصوصية قوية', ids: ['proton'], why: 'Proton VPN Plus خيار معروف للخصوصية، لكن السعودية تحتاج خطة مدفوعة.' },
+    refund: { title: 'تجربة/استرجاع طويل', ids: ['cyberghost', 'surfshark'], why: 'جرّب الخدمة، افحص IP، واطلب الاسترجاع خلال المدة المعلنة إذا لم تناسبك.' },
+    streaming: { title: 'مشاهدة فقط', ids: ['unlocator', 'surfshark'], why: 'Smart DNS مناسب للمشاهدة فقط، بينما VPN كامل يغيّر IP لكل التصفح.' },
+    static: { title: 'IP ثابت للبنوك/الأعمال', ids: ['netspace'], why: 'بعض الخدمات تحتاج IP ثابتًا. هذا خيار أعمال وقد يتطلب تحقق هوية.' }
+  };
+
+  async function ensureProviders() {
+    if (state.providers) return state.providers;
+    const res = await fetch('/data/providers.json');
+    if (!res.ok) throw new Error('تعذر تحميل قائمة الخدمات');
+    state.providers = await res.json();
+    return state.providers;
+  }
+
+  function providerCard(p) {
+    const badges = [
+      p.trial ? `<span class="badge badge-green">${esc(p.trial)}</span>` : '',
+      p.refund ? `<span class="badge badge-blue">${esc(p.refund)}</span>` : '',
+      p.devices ? `<span class="badge">${esc(p.devices)}</span>` : ''
+    ].filter(Boolean).join('');
+    return `
+      <div class="card ready-card">
+        <div class="ready-head">
+          <div class="ready-logo">${p.emoji || '🌐'}</div>
+          <div>
+            <h3>${esc(p.name)}</h3>
+            <div class="muted">${esc(p.saudiLabel || '')}</div>
+          </div>
+        </div>
+        <div class="ready-meta">${badges}</div>
+        <p style="font-size:14px;"><b>الأنسب لـ:</b> ${esc(p.bestFor || '')}</p>
+        <p class="muted" style="font-size:13px;">${esc(p.caution || '')}</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;">
+          <button class="btn btn-primary btn-sm" data-provider-steps="${esc(p.id)}">الخطوات</button>
+          <a class="btn btn-ghost btn-sm" href="${esc(p.signup || p.url)}" target="_blank" rel="noopener">الموقع الرسمي</a>
+          <a class="btn btn-ghost btn-sm" href="${esc(p.download || p.url)}" target="_blank" rel="noopener">التطبيق</a>
+          <button class="btn btn-ghost btn-sm" data-goto="check">افحص IP بعد الاتصال</button>
+        </div>
+      </div>`;
+  }
+
+  async function renderReady() {
+    const grid = $('#readyGrid');
+    if (!grid) return;
+    try {
+      const data = await ensureProviders();
+      const list = (data.providers || []).filter((p) => state.providerFilter === 'all' || p.category === state.providerFilter);
+      grid.innerHTML = list.map(providerCard).join('') || '<div class="card empty-state"><h3>لا توجد خدمات في هذا التصنيف</h3></div>';
+      const updated = $('#readyUpdated');
+      if (updated) updated.textContent = `آخر تحديث للقائمة: ${data.updatedAt || 'غير معروف'} • ${data.disclaimer || ''}`;
+    } catch (err) {
+      grid.innerHTML = `<div class="card empty-state"><h3>تعذر تحميل الخدمات</h3><p>${esc(err.message)}</p></div>`;
+    }
+  }
+
+  async function showRecommendation(key) {
+    const reco = RECOMMENDATIONS[key];
+    const box = $('#recoResult');
+    if (!reco || !box) return;
+    try {
+      await ensureProviders();
+      const picks = (state.providers.providers || []).filter((p) => reco.ids.includes(p.id));
+      box.classList.remove('hidden');
+      box.innerHTML = `
+        <div class="banner banner-green" style="margin-bottom:12px;">✅ <span><b>${esc(reco.title)}:</b> ${esc(reco.why)}</span></div>
+        <div class="ready-grid">${picks.map(providerCard).join('')}</div>`;
+    } catch (err) {
+      toast(err.message, 'err');
+    }
+  }
+
+  function openProviderSteps(id) {
+    if (!state.providers) return;
+    const p = (state.providers.providers || []).find((x) => x.id === id);
+    if (!p) return;
+    openModal(`
+      <div class="modal-head">
+        <h3>${p.emoji || '🌐'} ${esc(p.name)}</h3>
+        <button class="modal-close" aria-label="إغلاق">✕</button>
+      </div>
+      <p class="muted" style="font-size:13.5px;margin-bottom:14px;">${esc(p.saudiLabel || '')} • ${esc(p.priceNote || '')}</p>
+      <ol class="guide-steps">
+        ${(p.steps || []).map((s) => `<li><div class="g-text">${esc(s)}</div></li>`).join('')}
+      </ol>
+      <div class="banner" style="margin-top:16px;">⚠️ <span>${esc(p.caution || '')}</span></div>
+      <div class="modal-actions">
+        <a class="btn btn-primary" href="${esc(p.signup || p.url)}" target="_blank" rel="noopener">افتح الموقع الرسمي</a>
+        <a class="btn btn-ghost" href="${esc(p.download || p.url)}" target="_blank" rel="noopener">تحميل التطبيق</a>
+      </div>
+      ${p.source ? `<p class="muted" style="font-size:12px;margin-top:12px;">المصدر: <a href="${esc(p.source)}" target="_blank" rel="noopener">${esc(p.source)}</a></p>` : ''}
+    `);
+  }
+
   /* ================= الخادم ================= */
   function renderServerCommands() {
     const origin = location.origin;
@@ -638,6 +738,17 @@
       }
       const method = e.target.closest('[data-method]');
       if (method) { setServerMethod(method.dataset.method); return; }
+      const providerFilter = e.target.closest('[data-provider-filter]');
+      if (providerFilter) {
+        state.providerFilter = providerFilter.dataset.providerFilter;
+        $$('#readyFilters .pill').forEach((b) => b.classList.toggle('active', b.dataset.providerFilter === state.providerFilter));
+        renderReady();
+        return;
+      }
+      const reco = e.target.closest('[data-reco]');
+      if (reco) { showRecommendation(reco.dataset.reco); return; }
+      const providerSteps = e.target.closest('[data-provider-steps]');
+      if (providerSteps) { openProviderSteps(providerSteps.dataset.providerSteps); return; }
       const guide = e.target.closest('[data-guide]');
       if (guide) { renderGuide(guide.dataset.guide); return; }
       const qr = e.target.closest('[data-qr]');
